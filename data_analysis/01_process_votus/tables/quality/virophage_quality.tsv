@@ -1,0 +1,22 @@
+contig_id	contig_length	provirus	proviral_length	gene_count	viral_genes	host_genes	checkv_quality	miuvig_quality	completeness	completeness_method	contamination	kmer_freq	warnings
+AP1_NODE_2381_length_17703_cov_2.970642	17703	No	NA	21	3	0	Medium-quality	Genome-fragment	78.72	AAI-based (medium-confidence)	0.0	1.0	
+AP2_NODE_3393_length_15810_cov_1.154052	15810	No	NA	16	2	0	Medium-quality	Genome-fragment	58.76	AAI-based (high-confidence)	0.0	1.01	
+AP3_NODE_1616_length_20003_cov_1.322147	20003	No	NA	16	0	0	Not-determined	Genome-fragment	NA	NA	0.0	1.01	no viral genes detected
+AP3_NODE_3934_length_11514_cov_1.002283	11514	No	NA	11	0	0	Medium-quality	Genome-fragment	51.19	AAI-based (medium-confidence)	0.0	1.0	no viral genes detected
+AP5_NODE_507_length_32858_cov_2.916348	32858	No	NA	46	10	0	High-quality	High-quality	100.0	AAI-based (medium-confidence)	0.0	1.62	high kmer_freq may indicate large duplication
+AP5_NODE_781_length_26030_cov_2.121646	26030	No	NA	24	3	0	High-quality	High-quality	100.0	AAI-based (medium-confidence)	0.0	1.01	
+MP1_NODE_4998_length_10824_cov_1.664111	10824	No	NA	11	4	0	Low-quality	Genome-fragment	2.62	HMM-based (lower-bound)	0.0	1.0	
+MP2_NODE_2467_length_13427_cov_3.404586	13427	No	NA	13	4	0	Low-quality	Genome-fragment	3.25	HMM-based (lower-bound)	0.0	1.0	
+MP2_NODE_624_length_29876_cov_2.393526	29876	No	NA	26	6	0	Complete	High-quality	100.0	DTR (high-confidence)	0.0	1.0	
+MP2_NODE_788_length_26233_cov_4.629204	26233	No	NA	28	5	0	High-quality	High-quality	100.0	AAI-based (medium-confidence)	0.0	1.01	
+MP3_NODE_699_length_26021_cov_1.570209	26021	No	NA	28	5	0	High-quality	High-quality	100.0	AAI-based (medium-confidence)	0.0	1.0	
+MP3_NODE_909_length_22411_cov_2.412448	22411	No	NA	21	4	0	High-quality	High-quality	100.0	AAI-based (medium-confidence)	0.0	1.01	
+MP4_NODE_4023_length_10235_cov_1.358726	10235	No	NA	9	2	0	Low-quality	Genome-fragment	0.98	HMM-based (lower-bound)	0.0	1.0	
+MP4_NODE_952_length_22651_cov_3.035473	22651	No	NA	21	4	0	High-quality	High-quality	100.0	AAI-based (medium-confidence)	0.0	1.01	
+MP5_NODE_1029_length_21858_cov_6.080237	21858	No	NA	21	4	0	High-quality	High-quality	100.0	AAI-based (medium-confidence)	0.0	1.0	
+MP5_NODE_2166_length_14130_cov_3.833107	14130	No	NA	11	3	0	Low-quality	Genome-fragment	4.17	HMM-based (lower-bound)	0.0	1.01	
+MP5_NODE_945_length_23155_cov_4.946543	23155	No	NA	26	4	0	Low-quality	Genome-fragment	7.79	HMM-based (lower-bound)	0.0	1.02	low-confidence DTR
+PP1_NODE_1240_length_13758_cov_4.906463	13758	No	NA	13	3	0	Medium-quality	Genome-fragment	55.07	AAI-based (medium-confidence)	0.0	1.01	
+PP2_NODE_845_length_18425_cov_2.699147	18425	No	NA	18	4	0	Medium-quality	Genome-fragment	72.66	AAI-based (medium-confidence)	0.0	1.02	
+PP3_NODE_909_length_17486_cov_2.456363	17486	No	NA	20	4	0	Medium-quality	Genome-fragment	70.22	AAI-based (medium-confidence)	0.0	1.02	
+PP4_NODE_2198_length_11284_cov_1.761137	11284	No	NA	11	3	0	Low-quality	Genome-fragment	44.74	AAI-based (medium-confidence)	0.0	1.01	
