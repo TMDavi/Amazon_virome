@@ -1,0 +1,1637 @@
+---
+title: "viral_alpha_n_betadiv_steps"
+author: "TMDavi"
+date: "2024-09-19"
+output: html_document
+---
+# Set environment
+```{r setup}
+#knitr::opts_chunk$set(echo = TRUE)
+# Loading necessary libraries
+library(vegan)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+library(RVAideMemoire)
+library(car)
+library(psych)
+library(rstatix)
+library(DescTools)
+library(knitr)
+library(dplyr)
+library(dunn.test)
+# Set working directory to your location (adjust path as necessary)
+#setwd('/home/davidmartins/Documentos/viral_analysis_v2/contig_mapping/')
+```
+
+## ALPHA DIVERSITY
+
+```{r cars}
+#ALPHA DIVERSITY##############################################################
+
+# Transpose the data so that columns become rows (samples)
+data <- read.csv('votus_dataset2_TMM_rel_abund.txt', sep = '\t', row.names = 1, check.names = FALSE)
+
+# Ensure all data are numeric
+data <- as.data.frame(lapply(data, as.numeric), row.names = rownames(data))
+
+# Apply log(x + 1) transformation
+data_log <- log1p(data) 
+
+data_transposed <- t(data_log)
+
+# Check if data is numeric and properly formatted
+str(data_transposed)
+data_transposed <- as.matrix(data_transposed)
+head(data_transposed)
+```
+
+## Calculate alpha diversity indexes 
+
+```{r cars2}
+# Shannon diversity index
+shannon_diversity <- diversity(data_transposed, index = "shannon")
+shannon_diversity
+
+```
+```{r cars3}
+# Observed diversity index (Species Richness)
+observed <- specnumber(data_transposed)
+observed
+
+
+```
+```{r cars3}
+# Simpsom index
+simpson_diversity <- diversity(data_transposed, index = "simpson")
+simpson_diversity
+
+
+```
+
+## Prepare the table
+
+```{r cars4}
+# Combine the indices into a single data frame for plotting
+diversity_data_per_sample <- data.frame(
+  samples = c('AP1','AP1','AP1','AP2','AP2','AP2','AP3','AP3','AP3','AP4','AP4','AP4','AP5','AP5','AP5',
+              'BP1','BP1','BP1','BP2','BP2','BP2','BP3','BP3','BP3','BP4','BP4','BP4','BP5','BP5','BP5',
+             'MP1','MP1','MP1','MP2','MP2','MP2','MP3','MP3','MP3','MP4','MP4','MP4','MP5','MP5','MP5',
+             'PP1','PP1','PP1','PP2','PP2','PP2','PP3','PP3','PP3','PP4','PP4','PP4','PP5','PP5','PP5'),
+  Shannon = shannon_diversity,
+  Observed = observed,
+  Simpson = simpson_diversity
+)
+diversity_data_per_sample
+
+# Saving the diversity data table
+#write.table(diversity_data, 'diversity_data_table.tsv', sep = '\t', row.names = FALSE)
+```
+```{r cars4}
+# Combine the indices into a single data frame for plotting
+diversity_data_per_city <- data.frame(
+  samples = c('Altamira','Altamira','Altamira','Altamira','Altamira','Altamira','Altamira','Altamira','Altamira','Altamira','Altamira','Altamira','Altamira','Altamira','Altamira',
+              'Braganca','Braganca','Braganca','Braganca','Braganca','Braganca','Braganca','Braganca','Braganca','Braganca','Braganca','Braganca','Braganca','Braganca','Braganca',
+             'Maraba','Maraba','Maraba','Maraba','Maraba','Maraba','Maraba','Maraba','Maraba','Maraba','Maraba','Maraba','Maraba','Maraba','Maraba',
+             'Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas','Paragominas'),
+  Shannon = shannon_diversity,
+  Observed = observed,
+  Simpson = simpson_diversity
+)
+diversity_data_per_city
+
+# Saving the diversity data table
+write.table(diversity_data_per_city, 'diversity_data_table_medium_to_complete.tsv', sep = '\t', row.names = FALSE)
+```
+
+# Normality of data evalation per sample
+
+```{r cars5}
+# Combine the indices into a single data frame for plotting
+#Statistical tests: ANOVA ##################################
+#Normalidade
+byf.shapiro(Shannon ~ samples, diversity_data_per_sample) 
+#byf.shapiro(Simpson ~ samples, diversity_data)
+#byf.shapiro(Observed ~ samples, diversity_data_per_sample) 
+byf.shapiro(Simpson ~ samples, diversity_data_per_sample) 
+```
+## ANOVA and bonferonni post-hoc for Shannon species index
+```{r cars6}
+anova_shannon <- aov(Shannon ~ samples, diversity_data_per_sample)
+summary(anova_shannon)
+  #post-hoc
+PostHocTest(anova_shannon, method = "bonf")
+```
+## ANOVA and bonferonni post-hoc for observed species index
+```{r cars7}
+#ANOVA
+anova_observed <- aov(Observed ~ samples, diversity_data_per_sample)
+summary(anova_observed)
+#post-hoc
+PostHocTest(anova_observed, method = "bonf")
+```
+## Alpha diversity boxplots per sample
+
+```{r pressure, echo=FALSE}
+#Preparing the table for plooting##########################################
+
+# Melt the data for easier plotting
+diversity_data_melted <- melt(diversity_data_per_sample, id.vars = "samples")
+diversity_data_melted
+#write.table(diversity_data_melted, 'diversity_data_melt_table.tsv',sep='\t',row.names = FALSE)
+
+# Generate separate box plots for each diversity index using facet_wrap
+ggplot(diversity_data_melted, aes(x = samples, y = value, fill = variable)) +
+geom_boxplot() +
+  labs(title = "Alpha Diversity Indices for Each Sample", x = "Sample", y = "Diversity Index Value") +
+  facet_wrap(~ variable, scales = "free_y") +  # Separate facets for each index (Shannon, Simpson, Species Richness)
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))  # Rotate x-axis labels for readability
+
+```
+
+## Alpha diversity boxplots per city
+```{r pressure, echo=FALSE}
+#Preparing the table for plooting##########################################
+
+# Melt the data for easier plotting
+diversity_data_melted <- melt(diversity_data_per_city, id.vars = "samples")
+diversity_data_melted
+#write.table(diversity_data_melted, 'diversity_data_melt_table.tsv',sep='\t',row.names = FALSE)
+
+# Generate separate box plots for each diversity index using facet_wrap
+ggplot(diversity_data_melted, aes(x = samples, y = value, fill = variable)) +
+  geom_boxplot()+ geom_point(position = "jitter") +
+  labs(title = "Alpha Diversity Indices for Each Sample", x = "Sample", y = "Diversity Index Value") +
+  facet_wrap(~ variable, scales = "free_y") +  # Separate facets for each index (Shannon, Simpson, Species Richness)
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))  # Rotate x-axis labels for readability
+
+```
+# Normality of data evalation per sample
+
+```{r cars5}
+# Combine the indices into a single data frame for plotting
+#Statistical tests: ANOVA ##################################
+#Normalidade
+byf.shapiro(Shannon ~ samples, diversity_data_per_city) 
+byf.shapiro(Observed ~ samples, diversity_data_per_city) 
+byf.shapiro(Simpson ~ samples, diversity_data_per_city) 
+```
+# ANOVA and bonferonni post-hoc for Shannon species index
+```{r cars6}
+anova_shannon <- aov(Shannon ~ samples, diversity_data_per_city)
+summary(anova_shannon)
+  #post-hoc
+PostHocTest(anova_shannon, method = "bonf")
+```
+#ANOVA and bonferonni post-hoc for observed species index
+```{r cars7}
+#ANOVA
+anova_observed <- aov(Observed ~ samples, diversity_data_per_city)
+summary(anova_observed)
+#post-hoc
+PostHocTest(anova_observed, method = "bonf")
+```
+#ANOVA and bonferonni post-hoc for Simpson species index
+```{r cars7}
+#ANOVA
+anova_simpson <- aov(Simpson ~ samples, diversity_data_per_city)
+summary(anova_simpson)
+#post-hoc
+PostHocTest(anova_simpson, method = "bonf")
+```
+# Shannon per city
+#Kruskal Wallis test shannon
+```{r cars7}
+kruskal_test <- kruskal.test(Shannon ~ samples, data = diversity_data_per_city)
+kruskal_test
+# Post-hoc test (pairwise Wilcoxon)
+dunn.test(x = diversity_data_per_city$Shannon, diversity_data_per_city$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+
+```
+# Plottig the alpha div graph but with different shapes depending on the city point
+```{r pressure2, echo=FALSE}
+library(ggpubr)
+library(ggplot2)
+library(reshape2)
+
+set.seed(1234)
+
+diversity_data_per_city$point <- c('P1','P1','P1','P2','P2','P2','P3','P3','P3','P4','P4','P4','P5','P5','P5',
+                                   'P1','P1','P1','P2','P2','P2','P3','P3','P3','P4','P4','P4','P5','P5','P5',
+                                   'P1','P1','P1','P2','P2','P2','P3','P3','P3','P4','P4','P4','P5','P5','P5',
+                                   'P1','P1','P1','P2','P2','P2','P3','P3','P3','P4','P4','P4','P5','P5','P5')
+
+# ---- Prepare table for plotting ----
+
+# Only keep numeric diversity metrics + metadata
+div_long <- melt(
+  diversity_data_per_city[, c("samples", "Shannon", "Observed", "point")],
+  id.vars = c("samples", "point")
+)
+
+# Ensure numeric
+div_long$value <- as.numeric(as.character(div_long$value))
+
+# Keep only the Shannon data for this plot
+shannon_melted <- subset(div_long, variable == "Shannon")
+
+# ---- Plot ----
+p <- ggplot(shannon_melted, aes(x = samples, y = value, fill = samples)) +
+  geom_boxplot(show.legend = TRUE, outlier.shape = NA, alpha = 0.6, width = 0.6, coef = 0) +
+  geom_jitter(aes(shape = point), color = "black", size = 4, width = 0.15, show.legend = TRUE) +
+
+  scale_fill_manual(values = c(
+    "Altamira" = "#E69F00",
+    "Braganca" = "#56B4E9",
+    "Maraba" = "#009E73",
+    "Paragominas" = "#CC79A7"
+  )) +
+  scale_shape_manual(values = c(
+    "P1" = 21, "P2" = 22, "P3" = 23, "P4" = 24, "P5" = 25
+  )) +
+
+  labs(title = "Shannon diversity value for each Sample",
+       x = NULL, y = "Shannon Index Value",
+       fill = "City", shape = "Collection point") +
+
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "right"
+  ) +
+  labs(
+    tag = 'A'
+  )
+   theme(plot.tag.position = c(0.01, 1), # Position the tag in the top-left corner of the entire figure
+        plot.tag = element_text(hjust = 0, vjust = 1, size = 50, face = "bold"))
+
+# ---- Significance annotations ----
+max_y <- max(shannon_melted$value, na.rm = TRUE)
+
+p <- p +
+  geom_signif(comparisons = list(c("Altamira", "Maraba")),
+              annotations = "***",
+              y_position = max_y * 1.05) +
+  geom_signif(comparisons = list(c("Braganca", "Maraba")),
+              annotations = "***",
+              y_position = max_y * 1.07) +
+  geom_signif(comparisons = list(c("Braganca", "Paragominas")),
+              annotations = "*",
+              y_position = max_y * 1.09) +
+  geom_signif(comparisons = list(c("Paragominas", "Maraba")),
+              annotations = "***",
+              y_position = max_y * 1.12) + 
+  guides(fill = "none")
+p
+tiff("viral_shannon_div_with_diff_shapes.tiff",  width = 7, height = 5, units = "in", res = 300)
+print(p)
+dev.off()
+
+```
+
+
+#Kruskal Wallis test simpson
+```{r cars7}
+kruskal_test <- kruskal.test(Observed ~ samples, data = diversity_data_per_city)
+kruskal_test
+# Post-hoc test
+dunn.test(x = diversity_data_per_city$Observed, diversity_data_per_city$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+
+```
+
+
+# Observed per city
+```{r pressure, echo=FALSE}
+library(ggpubr)
+set.seed(1234)
+#loading the anova post hoc results
+#tukey <- TukeyHSD(anova_shannon)
+
+#Preparing the table for plooting##########################################
+  
+# Only keep numeric diversity metrics + metadata
+div_long <- melt(
+  diversity_data_per_city[, c("samples", "Simpson", "Observed", "point")],
+  id.vars = c("samples", "point")
+)
+
+# Ensure numeric
+div_long$value <- as.numeric(as.character(div_long$value))
+
+# Keep only the Shannon data for this plot
+observed_melted <- subset(div_long, variable == "Observed")
+max_y <- max(observed_melted$value, na.rm = TRUE)
+
+# Generate separate box plots for each diversity index using facet_wrap
+g <- ggplot(observed_melted, aes(x = samples, y = value, fill = samples)) +
+  geom_boxplot(show.legend = FALSE, outlier.shape = NA, alpha=0.6, width=0.6, coef=0) + 
+  geom_jitter(aes(shape = point),show.legend = FALSE, color="black", size=4) +
+  scale_shape_manual(values = c(
+    "P1" = 21, "P2" = 22, "P3" = 23, "P4" = 24, "P5" = 25
+  )) +
+  scale_fill_manual(values = c(
+    "Altamira" = "#F8766D",   # red
+    "Braganca" = "#7CAE00",   # green
+    "Maraba"   = "#00BFC4",   # cyan
+    "Paragominas" = "#C77CFF" # purple
+  )) +
+  scale_color_manual(values = c(
+    "Altamira" = "#F8766D",
+    "Braganca" = "#7CAE00",
+    "Maraba"   = "#00BFC4",
+    "Paragominas" = "#C77CFF"
+  )) +
+  labs(title = "Observed diversity value for each Sample",
+     x = "Sample", y = "Observed Index Value") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    plot.title = element_text(hjust = 0.5)   # Center title
+  ) + 
+  
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1))  # Rotate x-axis labels for readability
+  
+g <- g +
+  
+  geom_signif(comparisons = list(c("Altamira", "Maraba")),
+              annotations = "***",
+              y_position = max_y * 1.05) +
+  geom_signif(comparisons = list(c("Braganca", "Maraba")),
+              annotations = "***",
+              y_position = max_y * 1.11) +
+  geom_signif(comparisons = list(c("Paragominas", "Maraba")),
+              annotations = "***",
+              y_position = max_y * 1.15) +
+  guides(fill = "none")
+g
+#tiff("viral_shannon_div.tiff",  width = 8, height = 7, units = "in", res = 300)
+#print(p)
+#dev.off()
+```
+
+#Separating the samples for each city and evaluating the alpha diversity individually (SHannon)
+```{r pressure2, echo=FALSE}
+## Altamira
+altamira_div <- diversity_data_per_city[diversity_data_per_city$samples == "Altamira", ]
+altamira_div <- subset(altamira_div, select = -c(samples, Simpson, point))
+altamira_div$samples <- c("AP1","AP1","AP1",
+                          "AP2","AP2","AP2",
+                          "AP3","AP3","AP3",
+                          "AP4","AP4","AP4",
+                          "AP5","AP5","AP5")
+
+## Marabá (prefix MP)
+maraba_div <- diversity_data_per_city[diversity_data_per_city$samples == "Maraba", ]
+maraba_div <- subset(maraba_div, select = -c(samples,  Simpson, point))
+maraba_div$samples <- c("MP1","MP1","MP1",
+                        "MP2","MP2","MP2",
+                        "MP3","MP3","MP3",
+                        "MP4","MP4","MP4",
+                        "MP5","MP5","MP5")
+
+## Bragança (prefix BP)
+braganca_div <- diversity_data_per_city[diversity_data_per_city$samples == "Braganca", ]
+braganca_div <- subset(braganca_div, select = -c(samples, Simpson, point))
+braganca_div$samples <- c("BP1","BP1","BP1",
+                          "BP2","BP2","BP2",
+                          "BP3","BP3","BP3",
+                          "BP4","BP4","BP4",
+                          "BP5","BP5","BP5")
+
+## Paragominas (prefix PP)
+paragominas_div <- diversity_data_per_city[diversity_data_per_city$samples == "Paragominas", ]
+paragominas_div <- subset(paragominas_div, select = -c(samples, Simpson, point))
+paragominas_div$samples <- c("PP1","PP1","PP1",
+                             "PP2","PP2","PP2",
+                             "PP3","PP3","PP3",
+                             "PP4","PP4","PP4",
+                             "PP5","PP5","PP5")
+paragominas_div
+```
+#Ploting the separated boxplots
+#ALtamira alpha
+```{r pressure2, echo=FALSE}
+# Melt the data for easier plotting
+altamira_diversity_data_melted <- melt(altamira_div, id.vars = "samples")
+altamira_diversity_data_melted
+#write.table(diversity_data_melted, 'diversity_data_melt_table.tsv',sep='\t',row.names = FALSE)
+
+# Generate separate box plots for each diversity index using facet_wrap
+p <- ggplot(altamira_diversity_data_melted, aes(x = samples, y = value, fill = variable)) +
+  geom_boxplot() +
+    labs(title = "Altamira Alpha Diversity Indices", x = "Sample", y = "Diversity Index Value") +
+    scale_fill_manual(values = c("Shannon" = "purple", "Observed" = "yellow")) +
+    facet_wrap(~ variable, scales = "free_y") +  # Separate facets for each index (Shannon, Simpson, Species Richness)
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+p #<- p +
+#  geom_signif(comparisons = list(c("AP1", "AP5")),
+#              annotations = "**",
+#              y_position = max_y * 1.05) +
+#  geom_signif(comparisons = list(c("AP2", "AP5")),
+#              annotations = "*",
+#              y_position = max_y * 1.10) 
+#  
+#  guides(fill = "none")
+p
+```
+
+#Calculating normality and differences between points
+#ALtamira alpha
+
+```{r kruskall for altamira}
+altamira_kruskall <- kruskal.test(Shannon ~ samples, data = altamira_div)
+altamira_kruskall
+# Post-hoc test
+dunn.test(x = altamira_div$Shannon, altamira_div$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+```
+```{r kruskall for altamira}
+altamira_kruskall <- kruskal.test(Observed ~ samples, data = altamira_div)
+altamira_kruskall
+# Post-hoc test
+dunn.test(x = altamira_div$Observed, altamira_div$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+```
+
+#Bragança alpha
+```{r pressure2, echo=FALSE}
+braganca_diversity_data_melted <- melt(braganca_div, id.vars = "samples")
+braganca_diversity_data_melted
+#write.table(diversity_data_melted, 'diversity_data_melt_table.tsv',sep='\t',row.names = FALSE)
+
+# Generate separate box plots for each diversity index using facet_wrap
+ggplot(braganca_diversity_data_melted, aes(x = samples, y = value, fill = variable)) +
+geom_boxplot() +
+  labs(title = "Bragança Alpha Diversity Indices", x = "Sample", y = "Diversity Index Value") +
+  scale_fill_manual(values = c("Shannon" = "purple", "Observed" = "yellow")) +
+  facet_wrap(~ variable, scales = "free_y") +  # Separate facets for each index (Shannon, Simpson, Species Richness)
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+#Calculating normality and differences between points
+#Bragança alpha
+
+```{r pressure2, echo=FALSE}
+altamira_kruskall <- kruskal.test(Shannon ~ samples, data = braganca_div)
+altamira_kruskall
+# Post-hoc test
+dunn.test(x = braganca_div$Shannon, braganca_div$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+```
+
+
+```{r pressure2, echo=FALSE}
+braganca_kruskall <- kruskal.test(Observed ~ samples, data = braganca_div)
+braganca_kruskall
+# Post-hoc test
+dunn.test(x = braganca_div$Observed, braganca_div$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+```
+
+## Maraba alpha
+
+```{r pressure2, echo=FALSE}
+
+
+maraba_diversity_data_melted <- melt(maraba_div, id.vars = "samples")
+maraba_diversity_data_melted
+#write.table(diversity_data_melted, 'diversity_data_melt_table.tsv',sep='\t',row.names = FALSE)
+
+# Generate separate box plots for each diversity index using facet_wrap
+ggplot(maraba_diversity_data_melted, aes(x = samples, y = value, fill = variable)) +
+geom_boxplot() +
+  labs(title = "Marabá Alpha Diversity Indices", x = "Sample", y = "Diversity Index Value") +
+  scale_fill_manual(values = c("Shannon" = "purple", "Observed" = "yellow")) +
+  facet_wrap(~ variable, scales = "free_y") +  # Separate facets for each index (Shannon, Simpson, Species Richness)
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+#Maraba alpha
+
+```{r pressure2, echo=FALSE}
+maraba_kruskall <- kruskal.test(Shannon ~ samples, data = maraba_div)
+maraba_kruskall
+# Post-hoc test
+dunn.test(x = maraba_div$Shannon, maraba_div$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+```
+```{r pressure2, echo=FALSE}
+maraba_kruskall <- kruskal.test(Observed ~ samples, data = maraba_div)
+maraba_kruskall
+# Post-hoc test
+dunn.test(x = maraba_div$Observed, maraba_div$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+```
+
+## Paragominas alpha
+```{r pressure2, echo=FALSE}
+paragominas_diversity_data_melted <- melt(paragominas_div, id.vars = "samples")
+paragominas_diversity_data_melted
+#write.table(diversity_data_melted, 'diversity_data_melt_table.tsv',sep='\t',row.names = FALSE)
+
+# Generate separate box plots for each diversity index using facet_wrap
+p <- ggplot(paragominas_diversity_data_melted, aes(x = samples, y = value, fill = variable)) +
+geom_boxplot() +
+  labs(title = "Paragominas Alpha Diversity Indices", x = "Sample", y = "Diversity Index Value") +
+  scale_fill_manual(values = c("Shannon" = "purple", "Observed" = "yellow")) +
+  facet_wrap(~ variable, scales = "free_y") +  # Separate facets for each index (Shannon, Simpson, Species Richness)
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+p
+#tiff('paragominas_alpha.tiff',width = 8, height = 7, units = "in", res=300)
+#print(p)
+#dev.off()
+```
+#Paragpminas alpha
+```{r pressure2, echo=FALSE}
+paragominas_kruskall <- kruskal.test(Shannon ~ samples, data = paragominas_div)
+paragominas_kruskall
+# Post-hoc test
+dunn.test(x = paragominas_div$Shannon, paragominas_div$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+
+```
+```{r pressure2, echo=FALSE}
+paragominas_kruskall <- kruskal.test(Observed ~ samples, data = paragominas_div)
+paragominas_kruskall
+# Post-hoc test
+dunn.test(x = paragominas_div$Observed, paragominas_div$samples, method = "bonferroni", alpha = 0.05, list = TRUE, table = TRUE)
+```
+
+## BETA DIVERSITY
+
+## PCoA per city
+```{r pressure2, echo=FALSE}
+# PCoA per city
+# Beta DIVERSITY with PCoA ##################################################
+library(vegan)
+library(ggplot2)
+
+# Replace NA with 0
+data_transposed[is.na(data_transposed)] <- 0
+
+# Bray-Curtis distances
+bc_dist <- vegdist(data_transposed, method = "bray")
+
+# Perform PCoA
+pcoa_res <- cmdscale(bc_dist, eig = TRUE, k = 2) # k = 2 axes
+
+# Convert to dataframe for plotting
+pcoa_df <- data.frame(
+  Sample = rownames(pcoa_res$points),
+  Axis1 = pcoa_res$points[,1],
+  Axis2 = pcoa_res$points[,2]
+)
+
+# Criar coluna City com nomes completos
+# Extract the first two letters of the sample name
+pcoa_df$City <- substr(pcoa_df$Sample, 1, 2)
+
+# Use ifelse to map the two-letter codes to full city names
+pcoa_df$City <- ifelse(pcoa_df$City == "AP", "Altamira",
+                       ifelse(pcoa_df$City == "BP", "Braganca",
+                              ifelse(pcoa_df$City == "MP", "Maraba",
+                                     ifelse(pcoa_df$City == "PP", "Paragominas", pcoa_df$City))))
+
+# Variance explained
+var_explained <- round(100 * pcoa_res$eig / sum(pcoa_res$eig), 2)
+
+# Definir cores fixas para cada cidade
+city_colors <- c("Altamira" = "#1f77b4",     # azul
+                 "Braganca" = "#ff7f0e",     # laranja
+                 "Maraba" = "#2ca02c",       # verde
+                 "Paragominas" = "#d62728")  # vermelho
+
+city_colors_enhanced <- c(
+"Altamira" = "#E69F00",  
+    "Braganca" = "#56B4E9",  
+    "Maraba" = "#009E73",    
+    "Paragominas" = "#CC79A7" 
+)
+
+p <- ggplot(pcoa_df, aes(x = Axis1, y = Axis2, fill = City)) +
+   
+  geom_point(shape = 21, color='black', size = 4, alpha = 0.8, stroke = 0.8) +
+  
+  
+  # Set colors for the border (color) and fill (fill)
+  
+  scale_fill_manual(values = city_colors_enhanced, name = "City") +
+  
+  labs(
+    title = "PCoA (Bray-Curtis)",
+    x = paste0("PCoA1 (", var_explained[1], "%)"),
+    y = paste0("PCoA2 (", var_explained[2], "%)")
+  ) +
+  theme_bw(base_size = 14) +
+  theme(
+    # Customize axis lines/ticks
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_rect(colour = "black", fill=NA, linewidth=1),
+    
+    # Position the legend clearly
+    legend.position = "right",
+    legend.title = element_text(face = "bold"),
+    legend.key = element_rect(fill = "white", color = NA), # Clean up legend keys
+    
+    # Ensure axis labels are bold
+    axis.title = element_text(face = "bold"),
+    
+    # Remove plot title as requested in the initial code (you can add one if needed)
+    plot.title = element_blank()
+  ) +
+  labs(
+    tag = 'B'
+  )
+   theme(plot.tag.position = c(0.01, 1), # Position the tag in the top-left corner of the entire figure
+        plot.tag = element_text(hjust = 0, vjust = 1, size = 50, face = "bold"))
+p
+# Show plot
+tiff("viral_betadiv_PCoA.tiff", width = 7, height = 5, units = "in", res = 300)
+print(p)
+dev.off()
+
+```
+# Tests whether communities differ by site
+```{r PERMANOVA per city}
+perm <- adonis2(bc_dist ~ City, data=pcoa_df, permutations=999)
+print(perm)
+perm$R2
+```
+
+
+# Test homogeneity of dispersion (betadisper) ----
+```{r PERMDISP per city}
+bd <- betadisper(bc_dist, pcoa_df$City)
+# Overall test
+#anova(bd)
+
+# Pairwise comparisons
+permutest(bd, pairwise = TRUE, permutations = 999) #Testa se os grupos são diferentes um dos outros
+
+TukeyHSD(bd) # Testa se a dispersão dos dados de um grupo é diferente das demais
+#Altamira tem maior dispersão em relação ao restante das amostras
+#Por que isso acontece?
+
+boxplot(bd)
+
+```
+```{r PERMDISP per city}
+plot(bd)
+
+```
+
+#Enviromental variables influence (with PCoA)
+#Env fit
+```{r pressure2, echo=FALSE}
+library(vegan)
+
+# bc_dist must already exist (Bray–Curtis or other)
+# Example: bc_dist <- vegdist(t(abund_table), method = "bray")
+
+pcoa_res <- cmdscale(bc_dist, eig = TRUE, k = 2)  # 2 PCoA axes
+pcoa_coords <- as.data.frame(pcoa_res$points)
+colnames(pcoa_coords) <- c("PCoA1", "PCoA2")
+
+# Make sure rownames match your sample order
+pcoa_coords$SampleID <- rownames(pcoa_coords)
+
+env_data <- read.csv("env_data.tsv.txt", sep = "\t")
+
+# Ensure same sample order
+env_data <- env_data[match(pcoa_coords$SampleID, env_data$SampleID), ]
+rownames(env_data) <- env_data$SampleID
+
+fit <- envfit(pcoa_coords[, c("PCoA1", "PCoA2")], 
+              env_data, 
+              permutations = 999)
+
+fit
+```
+#Mantel
+```{r pressure2, echo=FALSE}
+
+vars <- rownames(fit$vectors$arrows)
+
+envfit_df <- data.frame(
+  Variable = vars,
+  R2 = fit$vectors$r,
+  P = fit$vectors$pvals
+)
+
+envfit_sig <- subset(envfit_df, P < 0.05)
+
+env_data_numeric <- env_data[, 2:8]   # modify as needed
+
+mantel_results <- lapply(colnames(env_data_numeric), function(var) {
+  
+  x <- env_data_numeric[[var]]
+
+  x_scaled <- scale(x)
+  
+  x_dist <- dist(x_scaled, method = "euclidean")
+  
+  m <- mantel(bc_dist, x_dist, method = "spear", permutations = 9999)
+  
+  data.frame(Variable = var, Mantel_r = m$statistic)
+})
+
+mantel_df <- bind_rows(mantel_results)
+
+library(ggplot2)
+library(gridExtra)
+
+p1 <- ggplot(envfit_df, aes(x = R2, y = reorder(Variable, R2))) +
+  geom_bar(stat = "identity", fill = "purple") +
+  labs(title = "Goodness of fit (R²)", x = NULL, y = NULL) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size= 15)
+  )
+
+p2 <- ggplot(mantel_df, aes(x = Mantel_r, y = reorder(Variable, Mantel_r))) +
+  geom_bar(stat = "identity", fill = "yellow") +
+  labs(title = "Mantel statistic (r)", x = NULL, y = NULL) +
+  theme_minimal(base_size = 14) + theme(
+    plot.title = element_text(size= 15)
+  )
+
+tiff("envfit_vs_mantel.tiff", width = 6, height = 4, units = "in", res = 300)
+grid.arrange(p1, p2, ncol = 2) 
+dev.off()
+
+
+```
+
+```{r pcoa vs pH}
+# Plotting the correlation between pH and the betadiversity
+spearman_coeff <- cor.test(pcoa_df$Axis1,env_data$pH, method = 'spearman')
+#shapiro.test(pcoa_df)
+
+library(ggplot2)
+library(ggpubr)
+
+data_cor <- data.frame(
+  PCoA1 = pcoa_df$Axis1,
+  pH    = env_data$pH,
+  city  = pcoa_df$City
+)
+
+g_cor <- ggplot(data_cor, aes(x = PCoA1, y = pH, fill = city)) +
+  geom_point(shape = 21, color = "black", size = 4, alpha = 0.8, stroke = 0.8) +
+
+  # 👇 ONE correlation for every sample
+  stat_cor(
+    aes(group = 1),
+    method = "spearman",
+    label.x.npc = "left",
+    label.y.npc = "top"
+  ) +
+
+  labs(x = "PCoA 1 (36.77%)", y = "pH") +
+  scale_fill_manual(values = city_colors_enhanced, name = "City") +
+
+  # optional global trend line
+  geom_smooth(aes(group = 1), method = "lm", se = FALSE, color = "black", ) +
+
+  theme_bw()
+
+g_cor
+tiff("beta_vs_envdata_cor.tiff", width = 6, height = 4, units = "in", res = 300)
+print(g_cor) 
+dev.off()
+```
+
+## PCoA per city individually
+```{r pressure2, echo=FALSE}
+#First separating the cities
+data2 <- read.csv('votus_medium_to_complete_TMM_rel_abund.txt', sep = '\t', row.names = 1, check.names = FALSE)
+altamira_data <- data2 %>% # Selecting the altamira samples
+  select(AP1_A:AP5_C)
+altamira_data_transposed <- t(altamira_data) #transposing the data for future analysis
+
+braganca_data <- data2 %>% # Selecting the braganca samples
+  select(BP1_A:BP5_C)
+braganca_data_transposed <- t(braganca_data)
+
+maraba_data <- data2 %>% # Selecting the maraba samples
+  select(MP1_A:MP5_C)
+maraba_data_transposed <- t(maraba_data)
+
+paragominas_data <- data2 %>% # Selecting the altamira samples
+  select(PP1_A:PP5_C)
+paragominas_data_transposed <- t(paragominas_data)
+
+```
+
+#Altamira PCoA
+```{r pressure2, echo=FALSE}
+# Replace NA with 0
+altamira_data_transposed[is.na(altamira_data_transposed)] <- 0
+
+# Bray-Curtis distances
+bc_dist <- vegdist(altamira_data_transposed, method = "bray")
+
+# Perform PCoA
+pcoa_res <- cmdscale(bc_dist, eig = TRUE, k = 2) # k = 2 axes
+
+# Convert to dataframe for plotting
+pcoa_df <- data.frame(
+  Sample = rownames(pcoa_res$points),
+  Axis1 = pcoa_res$points[,1],
+  Axis2 = pcoa_res$points[,2]
+)
+
+pcoa_df <- subset(pcoa_df, select = -c(Sample))
+pcoa_df$Samples <- c('AP1', 'AP1', 'AP1','AP2', 'AP2', 'AP2','AP3', 'AP3', 'AP3','AP4', 'AP4', 'AP4','AP5', 'AP5', 'AP5')
+
+# Variance explained
+var_explained <- round(100 * pcoa_res$eig / sum(pcoa_res$eig), 2)
+
+# Definir cores fixas para cada cidade
+sample_colors <- c("AP1" = "#d55e00",     
+                 "AP2" = "#cc79a7",    
+                 "AP3" = "#0072b2",       
+                 "AP4" = "#f0e442",
+                 "AP5" = "#009e73")
+
+p_alt <- ggplot(pcoa_df, aes(x = Axis1, y = Axis2, color = Samples, fill = Samples)) +
+  geom_point(shape = 21, color = 'black', size = 4) +
+  #geom_text(aes(label = Samples), vjust = -1, size = 3, show.legend = FALSE) +
+  scale_color_manual(values = sample_colors) +
+  labs(
+    title = "PCoA of Altamira samples (Bray-Curtis)",
+    x = paste0("PCoA1 (", var_explained[1], "%)"),
+    y = paste0("PCoA2 (", var_explained[2], "%)")
+  ) +
+  theme_bw() +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold",size = 15))
+p_alt
+# Show plot
+tiff("altamira_betadiv_PCoA.tiff",  width = 6, height = 5, units = "in", res = 300)
+print(p_alt)
+dev.off()
+```
+
+### Altamira PERMANOVA analysis
+```{r cars8}
+#Calculate PERMANOVA
+library(vegan)
+
+result <- adonis2(bc_dist  ~ Samples, data = pcoa_df, permutations = 999)
+result
+```
+### Altamira PAIRWISE PERMANOVA analysis
+```{r cars8}
+#Calculate PERMANOVA
+# Run pairwise PERMANOVA
+bd <- betadisper(bc_dist, pcoa_df$Samples)
+anova(bd)
+permutest(bd, pairwise = TRUE)
+```
+
+#Braganca PCoA
+```{r pressure2, echo=FALSE}
+# Replace NA with 0
+braganca_data_transposed[is.na(braganca_data_transposed)] <- 0
+
+# Bray-Curtis distances
+bc_dist <- vegdist(braganca_data_transposed, method = "bray")
+
+# Perform PCoA
+pcoa_res <- cmdscale(bc_dist, eig = TRUE, k = 2) # k = 2 axes
+
+# Convert to dataframe for plotting
+pcoa_df <- data.frame(
+  Sample = rownames(pcoa_res$points),
+  Axis1 = pcoa_res$points[,1],
+  Axis2 = pcoa_res$points[,2]
+)
+
+pcoa_df <- subset(pcoa_df, select = -c(Sample))
+pcoa_df$Samples <- c('BP1', 'BP1', 'BP1','BP2', 'BP2', 'BP2','BP3', 'BP3', 'BP3','BP4', 'BP4', 'BP4','BP5', 'BP5', 'BP5')
+
+# Variance explained
+var_explained <- round(100 * pcoa_res$eig / sum(pcoa_res$eig), 2)
+
+# Definir cores fixas para cada cidade
+sample_colors <- c("BP1" = "#d55e00",     
+                 "BP2" = "#cc79a7",    
+                 "BP3" = "#0072b2",       
+                 "BP4" = "#f0e442",
+                 "BP5" = "#009e73")
+
+p_bra <- ggplot(pcoa_df, aes(x = Axis1, y = Axis2, color = Samples, fill = Samples)) +
+  geom_point(shape = 21, color = 'black', size = 4) +
+  #geom_text(aes(label = Samples), vjust = -1, size = 3, show.legend = FALSE) +
+  scale_color_manual(values = sample_colors) +
+  labs(
+    title = "PCoA of Braganca samples (Bray-Curtis)",
+    x = paste0("PCoA1 (", var_explained[1], "%)"),
+    y = paste0("PCoA2 (", var_explained[2], "%)")
+  ) +
+  theme_bw() +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold",size = 15))
+p_bra
+# Show plot
+tiff("braganca_betadiv_PCoA.tiff",  width = 6, height = 5, units = "in", res = 300)
+print(p_bra)
+dev.off()
+```
+### Bragança PERMANOVA analysis
+```{r cars8}
+#Calculate PERMANOVA
+library(vegan)
+
+result <- adonis2(bc_dist  ~ Samples, data = pcoa_df, permutations = 999)
+result
+```
+### Bragança PAIRWISE PERMANOVA analysis
+```{r cars8}
+#Calculate PERMANOVA
+# Run pairwise PERMANOVA
+bd <- betadisper(bc_dist, pcoa_df$Samples)
+anova(bd)
+permutest(bd, pairwise = TRUE)
+```
+#Maraba PCoA
+```{r pressure2, echo=FALSE}
+# Replace NA with 0
+maraba_data_transposed[is.na(maraba_data_transposed)] <- 0
+
+# Bray-Curtis distances
+bc_dist <- vegdist(maraba_data_transposed, method = "bray")
+
+# Perform PCoA
+pcoa_res <- cmdscale(bc_dist, eig = TRUE, k = 2) # k = 2 axes
+
+# Convert to dataframe for plotting
+pcoa_df <- data.frame(
+  Sample = rownames(pcoa_res$points),
+  Axis1 = pcoa_res$points[,1],
+  Axis2 = pcoa_res$points[,2]
+)
+
+pcoa_df <- subset(pcoa_df, select = -c(Sample))
+pcoa_df$Samples <- c('MP1', 'MP1', 'MP1','MP2', 'MP2', 'MP2','MP3', 'MP3', 'MP3','MP4', 'MP4', 'MP4','MP5', 'MP5', 'MP5')
+
+# Variance explained
+var_explained <- round(100 * pcoa_res$eig / sum(pcoa_res$eig), 2)
+
+# Definir cores fixas para cada cidade
+sample_colors <- c("MP1" = "#d55e00",     
+                 "MP2" = "#cc79a7",    
+                 "MP3" = "#0072b2",       
+                 "MP4" = "#f0e442",
+                 "MP5" = "#009e73")
+
+p_mar <- ggplot(pcoa_df, aes(x = Axis1, y = Axis2, color = Samples, fill = Samples)) +
+  geom_point(shape = 21, color = 'black', size = 4) +
+  #geom_text(aes(label = Samples), vjust = -1, size = 3, show.legend = FALSE) +
+  scale_color_manual(values = sample_colors) +
+  labs(
+    title = "PCoA of Maraba samples (Bray-Curtis)",
+    x = paste0("PCoA1 (", var_explained[1], "%)"),
+    y = paste0("PCoA2 (", var_explained[2], "%)")
+  ) +
+  theme_bw() +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold",size = 15))
+p_mar
+# Show plot
+tiff("maraba_betadiv_PCoA.tiff",  width = 6, height = 5, units = "in", res = 300)
+print(p_mar)
+dev.off()
+```
+### Maraba PERMANOVA analysis
+```{r cars8}
+#Calculate PERMANOVA
+library(vegan)
+
+result <- adonis2(bc_dist  ~ Samples, data = pcoa_df, permutations = 999)
+result
+```
+### Maraba PAIRWISE PERMANOVA analysis
+```{r cars8}
+#Calculate PERMANOVA
+# Run pairwise PERMANOVA
+bd <- betadisper(bc_dist, pcoa_df$Samples)
+anova(bd)
+permutest(bd, pairwise = TRUE)
+```
+#Maraba PCoA no P1
+```{r pressure2, echo=FALSE}
+# Replace NA with 0
+maraba_data_no_P1 <- select(maraba_data, -c('MP1_A','MP1_B','MP1_C'))
+maraba_data_no_P1_trasposed <- t(maraba_data_no_P1)
+
+# Replace NA with 0
+maraba_data_no_P1_trasposed[is.na(maraba_data_no_P1_trasposed)] <- 0
+
+# Bray-Curtis distances
+bc_dist <- vegdist(maraba_data_no_P1_trasposed, method = "bray")
+
+# Perform PCoA
+pcoa_res <- cmdscale(bc_dist, eig = TRUE, k = 2) # k = 2 axes
+
+# Convert to dataframe for plotting
+pcoa_df <- data.frame(
+  Sample = rownames(pcoa_res$points),
+  Axis1 = pcoa_res$points[,1],
+  Axis2 = pcoa_res$points[,2]
+)
+
+pcoa_df <- subset(pcoa_df, select = -c(Sample))
+pcoa_df$Samples <- c('MP2', 'MP2', 'MP2','MP3', 'MP3', 'MP3','MP4', 'MP4', 'MP4','MP5', 'MP5', 'MP5')
+
+# Variance explained
+var_explained <- round(100 * pcoa_res$eig / sum(pcoa_res$eig), 2)
+
+# Definir cores fixas para cada cidade
+sample_colors <- c(    
+                 "MP2" = "#cc79a7",    
+                 "MP3" = "#0072b2",       
+                 "MP4" = "#f0e442",
+                 "MP5" = "#009e73")
+
+p <- ggplot(pcoa_df, aes(x = Axis1, y = Axis2, color = Samples, fill = Samples)) +
+  geom_point(shape = 21, color = 'black', size = 3) +
+  #geom_text(aes(label = Samples), vjust = -1, size = 3, show.legend = FALSE) +
+  scale_color_manual(values = sample_colors) +
+  labs(
+    title = "PCoA of Maraba samples no P1 (Bray-Curtis)",
+    x = paste0("PCoA1 (", var_explained[1], "%)"),
+    y = paste0("PCoA2 (", var_explained[2], "%)")
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+
+# Show plot
+print(p)
+
+```
+#Paragominas PCoA
+```{r pressure2, echo=FALSE}
+# Replace NA with 0
+paragominas_data_transposed[is.na(paragominas_data_transposed)] <- 0
+
+# Bray-Curtis distances
+bc_dist <- vegdist(paragominas_data_transposed, method = "bray")
+
+# Perform PCoA
+pcoa_res <- cmdscale(bc_dist, eig = TRUE, k = 2) # k = 2 axes
+
+# Convert to dataframe for plotting
+pcoa_df <- data.frame(
+  Sample = rownames(pcoa_res$points),
+  Axis1 = pcoa_res$points[,1],
+  Axis2 = pcoa_res$points[,2]
+)
+
+pcoa_df <- subset(pcoa_df, select = -c(Sample))
+pcoa_df$Samples <- c('PP1', 'PP1', 'PP1','PP2', 'PP2', 'PP2','PP3', 'PP3', 'PP3','PP4', 'PP4', 'PP4','PP5', 'PP5', 'PP5')
+
+# Variance explained
+var_explained <- round(100 * pcoa_res$eig / sum(pcoa_res$eig), 2)
+
+# Definir cores fixas para cada cidade
+sample_colors <- c("PP1" = "#d55e00",     
+                 "PP2" = "#cc79a7",    
+                 "PP3" = "#0072b2",       
+                 "PP4" = "#f0e442",
+                 "PP5" = "#009e73")
+
+p_par <- ggplot(pcoa_df, aes(x = Axis1, y = Axis2, color = Samples, fill = Samples)) +
+  geom_point(shape = 21, color = 'black', size = 4) +
+  #geom_text(aes(label = Samples), vjust = -1, size = 3, show.legend = FALSE) +
+  scale_color_manual(values = sample_colors) +
+  labs(
+    title = "PCoA of Paragominas samples (Bray-Curtis)",
+    x = paste0("PCoA1 (", var_explained[1], "%)"),
+    y = paste0("PCoA2 (", var_explained[2], "%)")
+  ) +
+  theme_bw() +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 15))
+p_par
+# Show plot
+tiff("paragominas_betadiv_PCoA.tiff",  width = 6, height = 5, units = "in", res = 300)
+print(p_par)
+dev.off()
+```
+### Paragominas PERMANOVA analysis
+```{r cars8}
+#Calculate PERMANOVA
+library(vegan)
+
+result <- adonis2(bc_dist  ~ Samples, data = pcoa_df, permutations = 999)
+result
+```
+### Paragominas PAIRWISE PERMANOVA analysis
+```{r cars8}
+#Calculate PERMANOVA
+# Run pairwise PERMANOVA
+bd <- betadisper(bc_dist, pcoa_df$Samples)
+anova(bd)
+permutest(bd, pairwise = TRUE)
+```
+#Paragominas PCoA no P1
+```{r pressure2, echo=FALSE}
+# Replace NA with 0
+paragominas_data_no_P1 <- select(paragominas_data, -c('PP1_A'))
+paragominas_data_no_P1_trasposed <- t(paragominas_data_no_P1)
+
+paragominas_data_no_P1_trasposed[is.na(paragominas_data_no_P1_trasposed)] <- 0
+
+# Bray-Curtis distances
+bc_dist <- vegdist(paragominas_data_no_P1_trasposed, method = "bray")
+
+# Perform PCoA
+pcoa_res <- cmdscale(bc_dist, eig = TRUE, k = 2) # k = 2 axes
+
+# Convert to dataframe for plotting
+pcoa_df <- data.frame(
+  Sample = rownames(pcoa_res$points),
+  Axis1 = pcoa_res$points[,1],
+  Axis2 = pcoa_res$points[,2]
+)
+
+pcoa_df <- subset(pcoa_df, select = -c(Sample))
+pcoa_df$Samples <- c('PP1','PP1','PP2', 'PP2', 'PP2','PP3', 'PP3', 'PP3','PP4', 'PP4', 'PP4','PP5', 'PP5', 'PP5')
+
+# Variance explained
+var_explained <- round(100 * pcoa_res$eig / sum(pcoa_res$eig), 2)
+
+# Definir cores fixas para cada cidade
+sample_colors <- c('PP1' = "#1f77b4",
+                 "PP2" = "#ff7f0e",     # laranja
+                 "PP3" = "#2ca02c",       # verde
+                 "PP4" = "#d62728",
+                 "PP5" = "#9D00FF")  # roxo
+
+p <- ggplot(pcoa_df, aes(x = Axis1, y = Axis2, color = Samples)) +
+  geom_point(size = 3) +
+  geom_text(aes(label = Samples), vjust = -1, size = 3, show.legend = FALSE) +
+  scale_color_manual(values = sample_colors) +
+  labs(
+    title = "PCoA of Paragominas samples (Bray-Curtis)",
+    x = paste0("PCoA1 (", var_explained[1], "%)"),
+    y = paste0("PCoA2 (", var_explained[2], "%)")
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+
+# Show plot
+print(p)
+```
+#All betadiv per city joined
+```{r joined}
+library(patchwork)
+
+p_betadiv_joined <- (p_alt | p_bra) / (p_mar | p_par)
+
+tiff("betadiv_PCoA_per_city.tiff",  width = 10, height = 9, units = "in", res = 300)
+print(p_betadiv_joined)
+dev.off()
+```
+
+#NMDS per city
+```{r pressure2, echo=FALSE}
+
+# NMDS with Bray-Curtis #####################################################
+library(vegan)
+library(ggplot2)
+
+# Replace NA with 0
+data_transposed[is.na(data_transposed)] <- 0  
+
+# Bray-Curtis distances
+bc_dist <- vegdist(data_transposed, method = "bray")
+
+# Run NMDS (k=2 for 2D ordination)
+nmds_res <- metaMDS(bc_dist, k = 2, trymax = 100)
+
+# Extract site scores (samples in reduced space)
+nmds_points <- as.data.frame(scores(nmds_res, display = "sites"))
+nmds_points$Sample <- rownames(nmds_points)
+
+# Extract City name
+nmds_points$City <- sub("^([A-Z]{2}).*$", "\\1", nmds_points$Sample)
+
+lookup <- c("AP" = "Altamira",
+            "BP" = "Braganca",
+            "MP" = "Maraba",
+            "PP" = "Paragominas")
+
+nmds_points$City <- lookup[nmds_points$City]
+
+# Definir cores fixas
+city_colors <- c("Altamira" = "#1f77b4",    
+                 "Braganca" = "#ff7f0e",    
+                 "Maraba" = "#2ca02c",      
+                 "Paragominas" = "#d62728") 
+
+# NMDS plot
+p_nmds <- ggplot(nmds_points, aes(x = NMDS1, y = NMDS2, color = City)) +
+  geom_point(size = 3) +
+  geom_text(aes(label = Sample), vjust = -1, size = 3, show.legend = FALSE) +
+  scale_color_manual(values = city_colors) +
+  labs(
+    title = "NMDS (Bray-Curtis)",
+    x = "NMDS1",
+    y = "NMDS2",
+    caption = paste("Stress =", round(nmds_res$stress, 3))
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+
+# Show plot
+print(p_nmds)
+
+# Save as TIFF
+#tiff("/home/davidmartins/Documentos/viral_analysis_v2/div_analysis/nmds_plot_cities.tiff", 
+#     width = 8, height = 6, units = "in", res = 300)
+#print(p_nmds)
+#dev.off()
+
+```
+``` {r pressure2, echo=FALSE}
+# Assuming 'nmds_res' and 'nmds_points' are already calculated as in your initial code.
+
+library(ggplot2)
+# Make sure to load 'dplyr' if you haven't, for piping and data manipulation
+# library(dplyr)
+
+# 1. Define Professional Color Palette for Cities
+# Using colors that are distinct and aesthetically pleasing (e.g., from ColorBrewer)
+city_colors_enhanced <- c(
+    "Altamira" = "#E69F00",  
+    "Braganca" = "#56B4E9",  
+    "Maraba" = "#009E73",    
+    "Paragominas" = "#CC79A7" 
+)
+
+# 2. Extract Stress value for annotation
+stress_value <- round(nmds_res$stress, 4)
+k_value <- nmds_res$k
+
+# 3. NMDS Plot Enhancement
+p_nmds_final <- ggplot(nmds_points, aes(x = NMDS1, y = NMDS2, color = City, fill = City)) +
+  
+  # Use shape 21 (circle with border) for better visual quality
+  geom_point(shape = 21, color='black', size = 4, alpha = 0.8, stroke = 0.8) +
+  
+  # Set colors for the border (color) and fill (fill)
+  scale_color_manual(values = city_colors_enhanced, name = "City") +
+  scale_fill_manual(values = city_colors_enhanced, name = "City") +
+  
+  # Add Axes Labels
+  labs(
+    x = "NMDS1",
+    y = "NMDS2"
+  ) +
+  
+  # Use a clean, publication-ready theme
+  theme_bw(base_size = 14) +
+  theme(
+    # Customize axis lines/ticks
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_rect(colour = "black", fill=NA, linewidth=1),
+    
+    # Position the legend clearly
+    legend.position = "right",
+    legend.title = element_text(face = "bold"),
+    legend.key = element_rect(fill = "white", color = NA), # Clean up legend keys
+    
+    # Ensure axis labels are bold
+    axis.title = element_text(face = "bold"),
+    
+    # Remove plot title as requested in the initial code (you can add one if needed)
+    plot.title = element_blank()
+  ) +
+  
+  # 4. Add Annotations (Stress and K value, similar to the image's format)
+  annotate("text",
+           x = max(nmds_points$NMDS1, na.rm = TRUE), # Position at bottom right
+           y = min(nmds_points$NMDS2, na.rm = TRUE),
+           label = paste("K =", 2, "  Stress =", stress_value),
+           hjust = 1.0, vjust = 0, size = 4, fontface = "bold")
+
+tiff("viral_betadiv_NMDS.tiff",  width = 8, height = 7, units = "in", res = 300)   
+p_nmds_final
+dev.off()
+
+```
+#ANOSIM per city
+```{r pressure2, echo=FALSE}
+# Perform ANOSIM
+anosim_res <- anosim(bc_dist, grouping = nmds_points$City, permutations = 999)
+
+# Show results
+summary(anosim_res)
+plot(anosim_res)
+```
+#Enviromental variables influence
+#Env fit
+```{r pressure2, echo=FALSE}
+env_data <- read.csv('env_data.tsv.txt', sep='\t')
+env_data.rownames <- env_data$SampleID
+#env_data <- as.data.frame(lapply(env_data, as.numeric))
+
+
+library(vegan)
+
+#CHeck which environmental parameters are influencing in viral diversity
+
+pcoa_comps <- scores(nmds_res, display = "sites") # extracting he coordinates from the NMDS ordination
+
+fit <- envfit(nmds_coords,env_data, perm = 999) #Fitting
+fit
+```
+
+#Mantel
+```{r pressure2, echo=FALSE}
+# Plotting both env fit results and mantel correlation results
+#COnstruncting envfit dataframe
+vars <- rownames(fit$vectors$arrows)
+
+# Build clean dataframe
+envfit_df <- data.frame(
+  Variable = vars,
+  R2 = fit$vectors$r,
+  P = fit$vectors$pvals
+)
+
+# Filter significant variables
+envfit_sig <- subset(envfit_df, P < 0.05)
+
+
+#Calculate manntel statistics
+library(vegan)
+library(dplyr)
+library(gridExtra)
+
+
+env_data <- env_data[,2:10]
+mantel_results <- lapply(colnames(env_data), function(var) {
+  
+  # get 1 column only
+  x <- env_data[[var]]
+  
+  # scale variable
+  x_scaled <- scale(x)
+  
+  # euclidean distance
+  x_dist <- dist(x_scaled, method = "euclidean")
+  
+  # mantel test vs Bray–Curtis
+  m <- mantel(bc_dist, x_dist, method = "spear", permutations = 9999)
+  
+  data.frame(Variable = var, Mantel_r = m$statistic)
+})
+
+mantel_df <- bind_rows(mantel_results)
+
+library(ggplot2)
+library(gridExtra)
+
+p1 <- ggplot(envfit_df, aes(x = R2, y = reorder(Variable, R2))) +
+  geom_bar(stat = "identity", fill = "purple") +
+  labs(title = "Goodness of fit  r²", x = NULL, y = NULL) +
+  theme_minimal(base_size = 14)
+
+p2 <- ggplot(mantel_df, aes(x = Mantel_r, y = reorder(Variable, Mantel_r))) +
+  geom_bar(stat = "identity", fill = "yellow") +
+  labs(title = "Mantel statistic  r", x = NULL, y = NULL) +
+  theme_minimal(base_size = 14)
+
+grid.arrange(p1, p2, ncol = 2)
+
+```
+
+
+```{r pressure2, echo=FALSE}
+
+library(vegan)
+
+# Ensure City is a factor
+nmds_points$City <- as.factor(nmds_points$City)
+
+# Get all unique city combinations
+city_pairs <- combn(levels(nmds_points$City), 2, simplify = FALSE)
+
+# Empty list to store results
+anosim_pairs <- list()
+
+for (pair in city_pairs) {
+  
+  # Get sample names belonging to both cities in the pair
+  subset_samples <- nmds_points$SampleID[nmds_points$City %in% pair]
+  
+  # Subset the distance matrix by sample names to avoid indexing errors
+  subset_dist <- bc_dist[subset_samples, subset_samples]
+  subset_dist <- as.dist(subset_dist)   # convert back to 'dist'
+  
+  # Subset grouping factor
+  subset_group <- factor(nmds_points$City[nmds_points$SampleID %in% subset_samples])
+  
+  # Run ANOSIM
+  res <- anosim(subset_dist, grouping = subset_group, permutations = 999)
+  
+  # Store result
+  key <- paste(pair, collapse = "_vs_")
+  anosim_pairs[[key]] <- c(R = res$statistic, P = res$signif)
+}
+
+anosim_pairs
+# Combine results into a data frame
+#pairwise_anosim_df <- do.call(rbind, anosim_pairs)
+#pairwise_anosim_df <- as.data.frame(pairwise_anosim_df)
+#pairwise_anosim_df
+
+
+```
+
+
+#NMDS per sample
+
+# ALtamira NMDS
+```{r pressure2, echo=FALSE}
+
+# NMDS with Bray-Curtis #####################################################
+library(vegan)
+library(ggplot2)
+
+# Replace NA with 0
+altamira_data_transposed[is.na(altamira_data_transposed)] <- 0  
+
+# Bray-Curtis distances
+bc_dist <- vegdist(altamira_data_transposed, method = "bray")
+
+# Run NMDS (k=2 for 2D ordination)
+nmds_res <- metaMDS(bc_dist, k = 2, trymax = 100)
+
+# Extract site scores (samples in reduced space)
+nmds_points <- as.data.frame(scores(nmds_res, display = "sites"))
+nmds_points$Samples <- c('AP1', 'AP1', 'AP1','AP2', 'AP2', 'AP2','AP3', 'AP3', 'AP3','AP4', 'AP4', 'AP4','AP5', 'AP5', 'AP5')
+
+# Definir cores fixas para cada cidade
+sample_colors <- c("AP1" = "#1f77b4",     # azul
+                 "AP2" = "#ff7f0e",     # laranja
+                 "AP3" = "#2ca02c",       # verde
+                 "AP4" = "#d62728",
+                 "AP5" = "#9D00FF")  # roxo 
+
+# NMDS plot
+p_nmds <- ggplot(nmds_points, aes(x = NMDS1, y = NMDS2, color = Samples)) +
+  geom_point(size = 3) +
+  geom_text(aes(label = Samples), vjust = -1, size = 3, show.legend = FALSE) +
+  scale_color_manual(values = sample_colors) +
+  labs(
+    title = "NMDS (Bray-Curtis)",
+    x = "NMDS1",
+    y = "NMDS2",
+    caption = paste("Stress =", round(nmds_res$stress, 3))
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+
+# Show plot
+print(p_nmds)
+```
+## ANOSIM for altamira
+```{r pressure2, echo=FALSE}
+library(vegan)
+
+# Assuming 'community_data' is your community matrix
+dist_matrix <- vegdist(altamira_data_transposed, method = "bray")
+anosim_result <- anosim(dist_matrix, nmds_points$Samples, permutations = 999)
+anosim_result
+```
+
+```{r pressure2, echo=FALSE}
+
+# NMDS with Bray-Curtis #####################################################
+library(vegan)
+library(ggplot2)
+
+# Replace NA with 0
+braganca_data_transposed[is.na(braganca_data_transposed)] <- 0  
+
+# Bray-Curtis distances
+bc_dist <- vegdist(braganca_data_transposed, method = "bray")
+
+# Run NMDS (k=2 for 2D ordination)
+nmds_res <- metaMDS(bc_dist, k = 2, trymax = 100)
+
+# Extract site scores (samples in reduced space)
+nmds_points <- as.data.frame(scores(nmds_res, display = "sites"))
+nmds_points$Samples <- c('BP1', 'BP1', 'BP1','BP2', 'BP2', 'BP2','BP3', 'BP3', 'BP3','BP4', 'BP4', 'BP4','BP5', 'BP5', 'BP5')
+
+# Definir cores fixas para cada cidade
+sample_colors <- c("BP1" = "#1f77b4",     # azul
+                 "BP2" = "#ff7f0e",     # laranja
+                 "BP3" = "#2ca02c",       # verde
+                 "BP4" = "#d62728",
+                 "BP5" = "#9D00FF")  # roxo 
+
+# NMDS plot
+p_nmds <- ggplot(nmds_points, aes(x = NMDS1, y = NMDS2, color = Samples)) +
+  geom_point(size = 3) +
+  geom_text(aes(label = Samples), vjust = -1, size = 3, show.legend = FALSE) +
+  scale_color_manual(values = sample_colors) +
+  labs(
+    title = "NMDS (Bray-Curtis)",
+    x = "NMDS1",
+    y = "NMDS2",
+    caption = paste("Stress =", round(nmds_res$stress, 3))
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+
+# Show plot
+print(p_nmds)
+```
+
+### PERMANOVA analysis
+```{r cars8}
+#Calculate PERMANOVA
+bc_dist <- vegdist(data_transposed, method = "bray")
+# Create a matrix with the distances
+metadata <- data.frame(
+  sample = c("IT1_A", "IT1_B", "IT1_C", "IT2_A", "IT2_B", "IT2_C", "IT3_A", "IT3_B", "IT3_C", "IT4_A", "IT4_B", "IT4_C"),
+  group = c("IT1", "IT1", "IT1", "IT2", "IT2", "IT2", "IT3", "IT3", "IT3", "IT4", "IT4", "IT4")
+)
+
+result <- adonis2(bc_dist  ~ group, data = metadata, permutations = 999)
+result
+```
+
+### Pairwise PERMANOVA analysis
+```{r cars9}
+# Run pairwise PERMANOVA
+bd <- betadisper(bc_dist,metadata$group)
+anova(bd)
+permutest(bd, pairwise = TRUE)
+```
+
+```{r cars9}
+
+# Load required package
+library(vegan)
+
+# 1. Load your data ----
+# comm = community abundance table (samples x taxa), rownames = sample IDs
+# meta = metadata with at least a column "Site" for Altamira, Braganca, etc.
+
+comm <- read.table("community_table.tsv", header=TRUE, row.names=1, sep="\t")
+meta <- read.table("metadata.tsv", header=TRUE, sep="\t", row.names=1)
+
+# Ensure sample order matches
+comm <- comm[rownames(meta), ]
+
+# 2. Calculate Bray-Curtis distance ----
+bray_dist <- vegdist(comm, method="bray")
+
+# 3. PERMANOVA ----
+# Tests whether communities differ by site
+perm <- adonis2(bray_dist ~ Site, data=meta, permutations=999)
+print(perm)
+
+# 4. Test homogeneity of dispersion (betadisper) ----
+bd <- betadisper(bray_dist, meta$Site)
+anova(bd)              # test significance
+permutest(bd)          # permutation test
+plot(bd)               # visualize group dispersions
+
+# 5. NMDS ----
+nmds <- metaMDS(comm, distance="bray", k=2, trymax=100)
+plot(nmds, type="n")
+points(nmds, display="sites", col=as.factor(meta$Site), pch=19)
+
+# 6. Fit environmental variables (if you have them) ----
+# Example: meta has columns pH, TDS, DO, etc.
+env <- meta[, c("pH", "TDS", "DO")]   # adjust to your variables
+fit <- envfit(nmds, env, permutations=999)
+print(fit)
+plot(fit, p.max=0.05, col="black")   # plot only significant vectors
+
+
+```

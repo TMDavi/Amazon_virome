@@ -4,8 +4,8 @@ Repository to accompany "Unveiling the viral landscape of amazonian rivers: how 
 
 ## Data analysis
 
-Directory containing scripts used for viral sequence prediction steps
+Scripts used for data analysis and figure generation
 
 ## Data processing
 
-Scripts used for data analysis and figure generation
+Directory containing scripts used for viral sequence prediction steps
