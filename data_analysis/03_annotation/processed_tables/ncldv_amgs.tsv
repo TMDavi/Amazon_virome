@@ -1,0 +1,4 @@
+scaffold	category	header	subheader	gene_id	gene_description	sample	city
+MP2_NODE_15_length_245477_cov_2.130801	Organic Nitrogen	Peptidase		M17	Catlytic type: Metallo; any N-terminal amino acid can be released from dipeptides and polypeptides, although there is a preference for leucine; bonds with proline in P1 are not cleaved; maximally active between pH 9 and 9.5	MP2	Maraba
+MP4_NODE_107_length_80079_cov_4.182047	carbon utilization	hydrocarbon degradation		K01666	4-hydroxy 2-oxovalerate aldolase [EC:4.1.3.39] [RN:R00750]	MP4	Maraba
+MP4_NODE_107_length_80079_cov_4.182047	carbon utilization	hydrocarbon degradation		K01666	4-hydroxy 2-oxovalerate aldolase [EC:4.1.3.39] [RN:R00750]	MP4	Maraba

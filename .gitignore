@@ -205,5 +205,6 @@ pyrightconfig.json
 
 #Diretorios
 data_analysis/01_process_votus/sequences/
+data_analysis/03_annotation/raw_tables/annotations.tsv
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,jupyternotebooks
