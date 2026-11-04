@@ -1,0 +1,100 @@
+	city	Family	gene_id	category	header	subheader
+0	Altamira	f__Alteromonadaceae	K01784	MISC	Information systems	Nucleotide
+1	Altamira	f__Alteromonadaceae	K01784	carbon utilization	central carbon	glycolysis
+2	Altamira	f__Alteromonadaceae	K01784	carbon utilization (Woodcroft)	sugar utilization (woodcroft)	galactose degradation
+0	Altamira	f__Chitinophagaceae	K02040	Transporters	Transporters	
+1	Altamira	f__Chitinophagaceae	M17	Organic Nitrogen	Peptidase	
+0	Altamira	f__Coleofasciculaceae	K02703	Energy	Photosynthesis	
+0	Altamira	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+1	Altamira	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+2	Altamira	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+3	Altamira	f__Cyanobiaceae	K02639	Energy	Photosynthesis	
+4	Altamira	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+5	Altamira	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+6	Altamira	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+7	Altamira	f__Cyanobiaceae	K01494	MISC	Information systems	Nucleotide
+0	Altamira	f__Laspinemataceae	K02706	Energy	Photosynthesis	
+1	Altamira	f__Laspinemataceae	K02703	Energy	Photosynthesis	
+2	Altamira	f__Laspinemataceae	K02639	Energy	Photosynthesis	
+3	Altamira	f__Laspinemataceae	K02040	Transporters	Transporters	
+0	Altamira	f__Methylomonadaceae	K10946	Energy	Nitrogen	
+1	Altamira	f__Methylomonadaceae	K10946	Energy	Nitrogen	
+2	Altamira	f__Methylomonadaceae	K10946	Energy	C1	
+0	Altamira	f__Nostocaceae	K02703	Energy	Photosynthesis	
+0	Altamira	f__Prochlorotrichaceae	K02703	Energy	Photosynthesis	
+0	Altamira	f__Pseudanabaenaceae	K01494	MISC	Information systems	Nucleotide
+0	Bragança	f__Enterobacteriaceae	K01992	Transporters	Transporters	
+0	Maraba	f__Coleofasciculaceae	K02703	Energy	Photosynthesis	
+1	Maraba	f__Coleofasciculaceae	K02639	Energy	Photosynthesis	
+0	Maraba	f__Cyanobiaceae	K02040	Transporters	Transporters	
+1	Maraba	f__Cyanobiaceae	K02639	Energy	Photosynthesis	
+2	Maraba	f__Cyanobiaceae	K02639	Energy	Photosynthesis	
+3	Maraba	f__Cyanobiaceae	K02040	Transporters	Transporters	
+4	Maraba	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+5	Maraba	f__Cyanobiaceae	K00033	carbon utilization	central carbon	pentose pathway
+6	Maraba	f__Cyanobiaceae	K00033	carbon utilization	central carbon	pentose pathway
+7	Maraba	f__Cyanobiaceae	K02639	Energy	Photosynthesis	
+8	Maraba	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+9	Maraba	f__Cyanobiaceae	K02706	Energy	Photosynthesis	
+10	Maraba	f__Cyanobiaceae	K02040	Transporters	Transporters	
+11	Maraba	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+12	Maraba	f__Cyanobiaceae	K02706	Energy	Photosynthesis	
+13	Maraba	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+14	Maraba	f__Cyanobiaceae	K02706	Energy	Photosynthesis	
+15	Maraba	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+16	Maraba	f__Cyanobiaceae	K02639	Energy	Photosynthesis	
+17	Maraba	f__Cyanobiaceae	K02040	Transporters	Transporters	
+18	Maraba	f__Cyanobiaceae	K01494	MISC	Information systems	Nucleotide
+19	Maraba	f__Cyanobiaceae	K02639	Energy	Photosynthesis	
+20	Maraba	f__Cyanobiaceae	K02703	Energy	Photosynthesis	
+21	Maraba	f__Cyanobiaceae	K02706	Energy	Photosynthesis	
+0	Maraba	f__Cyclobacteriaceae	K00088	MISC	Information systems	Nucleotide
+0	Maraba	f__Hyphomicrobiaceae	K01494	MISC	Information systems	Nucleotide
+0	Maraba	f__LLD-282	K02639	Energy	Photosynthesis	
+1	Maraba	f__LLD-282	K02639	Energy	Photosynthesis	
+0	Maraba	f__Lachnospiraceae	K00643	MISC	MISC	
+1	Maraba	f__Lachnospiraceae	C82A	Organic Nitrogen	Peptidase	
+2	Maraba	f__Lachnospiraceae	K00762	MISC	Information systems	Nucleotide
+3	Maraba	f__Lachnospiraceae	K01784	MISC	Information systems	Nucleotide
+4	Maraba	f__Lachnospiraceae	K01784	carbon utilization	central carbon	glycolysis
+5	Maraba	f__Lachnospiraceae	K01784	carbon utilization (Woodcroft)	sugar utilization (woodcroft)	galactose degradation
+0	Maraba	f__Lactobacillaceae	K00560	MISC	Information systems	Nucleotide
+0	Maraba	f__Laspinemataceae	K02639	Energy	Photosynthesis	
+1	Maraba	f__Laspinemataceae	K02040	Transporters	Transporters	
+0	Maraba	f__Leptolyngbyaceae	K02706	Energy	Photosynthesis	
+1	Maraba	f__Leptolyngbyaceae	K02703	Energy	Photosynthesis	
+0	Maraba	f__MB11C04	K02040	Transporters	Transporters	
+1	Maraba	f__MB11C04	K00616	carbon utilization	central carbon	pentose pathway
+2	Maraba	f__MB11C04	K00616	carbon utilization	central carbon	pentose pathway
+0	Maraba	f__MRBY01	K02639	Energy	Photosynthesis	
+1	Maraba	f__MRBY01	K02703	Energy	Photosynthesis	
+0	Maraba	f__MedAcidi-G1	K02639	Energy	Photosynthesis	
+0	Maraba	f__Nanosyncoccaceae	K01637	carbon utilization	central carbon	glycolysis
+0	Maraba	f__Nostocaceae	K00943	MISC	Information systems	Nucleotide
+0	Maraba	f__Phormidesmidaceae	K02703	Energy	Photosynthesis	
+1	Maraba	f__Phormidesmidaceae	K02703	Energy	Photosynthesis	
+2	Maraba	f__Phormidesmidaceae	K02639	Energy	Photosynthesis	
+3	Maraba	f__Phormidesmidaceae	K00616	carbon utilization	central carbon	pentose pathway
+4	Maraba	f__Phormidesmidaceae	K00616	carbon utilization	central carbon	pentose pathway
+5	Maraba	f__Phormidesmidaceae	K02040	Transporters	Transporters	
+0	Maraba	f__Prochlorotrichaceae	K02703	Energy	Photosynthesis	
+0	Maraba	f__Rhizobiaceae	M24A	Organic Nitrogen	Peptidase	
+0	Maraba	f__Rhodocyclaceae	K01784	MISC	Information systems	Nucleotide
+1	Maraba	f__Rhodocyclaceae	K01784	carbon utilization	central carbon	glycolysis
+2	Maraba	f__Rhodocyclaceae	K01784	carbon utilization (Woodcroft)	sugar utilization (woodcroft)	galactose degradation
+3	Maraba	f__Rhodocyclaceae	M17	Organic Nitrogen	Peptidase	
+0	Maraba	f__Rikenellaceae	GT2	carbon utilization	CAZY	
+0	Maraba	f__Streptococcaceae	K02639	Energy	Photosynthesis	
+0	Maraba	f__Terrimicrobiaceae	U69	Organic Nitrogen	Peptidase	
+1	Maraba	f__Terrimicrobiaceae	U69	Organic Nitrogen	Peptidase	
+2	Maraba	f__Terrimicrobiaceae	U69	Organic Nitrogen	Peptidase	
+0	Maraba	f__Thalassarchaeaceae	K02703	Energy	Photosynthesis	
+1	Maraba	f__Thalassarchaeaceae	K02040	Transporters	Transporters	
+2	Maraba	f__Thalassarchaeaceae	K01251	Organic Nitrogen	Amino Acid	
+3	Maraba	f__Thalassarchaeaceae	K00033	carbon utilization	central carbon	pentose pathway
+4	Maraba	f__Thalassarchaeaceae	K00033	carbon utilization	central carbon	pentose pathway
+5	Maraba	f__Thalassarchaeaceae	K00036	carbon utilization	central carbon	pentose pathway
+6	Maraba	f__Thalassarchaeaceae	K00036	carbon utilization	central carbon	pentose pathway
+7	Maraba	f__Thalassarchaeaceae	K00036	carbon utilization	central carbon	glycolysis
+0	Paragominas	f__Cyanobiaceae	K02639	Energy	Photosynthesis	
+1	Paragominas	f__Cyanobiaceae	K02040	Transporters	Transporters	

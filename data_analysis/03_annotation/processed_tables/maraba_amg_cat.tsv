@@ -1,15 +1,15 @@
-	index	header	count
-0	0	Information systems	124
-1	1	Photosynthesis	56
-2	2	Peptidase	48
-3	3	central carbon	37
-4	4	CAZY	23
-5	5	Transporters	23
-6	6	sugar utilization (woodcroft)	15
-7	7	Amino Acid	8
-8	8	aerobic corrin ring synthesis	8
-9	9	ADO-CBL synthesis	5
-10	10	C1	4
-11	11	Antibiotic Resistance	2
-12	12	hydrocarbon degradation	1
-13	13	MISC	1
+	header	count
+0	Information systems	124
+1	Photosynthesis	56
+2	Peptidase	48
+3	central carbon	37
+4	CAZY	23
+5	Transporters	23
+6	sugar utilization (woodcroft)	15
+7	Amino Acid	8
+8	aerobic corrin ring synthesis	8
+9	ADO-CBL synthesis	5
+10	C1	4
+11	Antibiotic Resistance	2
+12	hydrocarbon degradation	1
+13	MISC	1

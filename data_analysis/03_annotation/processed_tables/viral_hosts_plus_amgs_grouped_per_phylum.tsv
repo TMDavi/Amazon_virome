@@ -1,0 +1,100 @@
+	city	Phylum	gene_id	category	header	subheader
+0	Altamira	p__Bacteroidota	K02040	Transporters	Transporters	
+1	Altamira	p__Bacteroidota	M17	Organic Nitrogen	Peptidase	
+0	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+1	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+2	Altamira	p__Cyanobacteriota	K02706	Energy	Photosynthesis	
+3	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+4	Altamira	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+5	Altamira	p__Cyanobacteriota	K02040	Transporters	Transporters	
+6	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+7	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+8	Altamira	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+9	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+10	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+11	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+12	Altamira	p__Cyanobacteriota	K01494	MISC	Information systems	Nucleotide
+13	Altamira	p__Cyanobacteriota	K01494	MISC	Information systems	Nucleotide
+14	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+15	Altamira	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+0	Altamira	p__Pseudomonadota	K01784	MISC	Information systems	Nucleotide
+1	Altamira	p__Pseudomonadota	K01784	carbon utilization	central carbon	glycolysis
+2	Altamira	p__Pseudomonadota	K01784	carbon utilization (Woodcroft)	sugar utilization (woodcroft)	galactose degradation
+3	Altamira	p__Pseudomonadota	K10946	Energy	Nitrogen	
+4	Altamira	p__Pseudomonadota	K10946	Energy	Nitrogen	
+5	Altamira	p__Pseudomonadota	K10946	Energy	C1	
+0	Bragança	p__Pseudomonadota	K01992	Transporters	Transporters	
+0	Maraba	p__Actinomycetota	K02639	Energy	Photosynthesis	
+0	Maraba	p__Bacillota	K02639	Energy	Photosynthesis	
+1	Maraba	p__Bacillota	K00643	MISC	MISC	
+2	Maraba	p__Bacillota	C82A	Organic Nitrogen	Peptidase	
+3	Maraba	p__Bacillota	K00762	MISC	Information systems	Nucleotide
+4	Maraba	p__Bacillota	K01784	MISC	Information systems	Nucleotide
+5	Maraba	p__Bacillota	K01784	carbon utilization	central carbon	glycolysis
+6	Maraba	p__Bacillota	K01784	carbon utilization (Woodcroft)	sugar utilization (woodcroft)	galactose degradation
+7	Maraba	p__Bacillota	K00560	MISC	Information systems	Nucleotide
+0	Maraba	p__Bacteroidota	GT2	carbon utilization	CAZY	
+1	Maraba	p__Bacteroidota	K00088	MISC	Information systems	Nucleotide
+0	Maraba	p__Cyanobacteriota	K02040	Transporters	Transporters	
+1	Maraba	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+2	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+3	Maraba	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+4	Maraba	p__Cyanobacteriota	K02040	Transporters	Transporters	
+5	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+6	Maraba	p__Cyanobacteriota	K00033	carbon utilization	central carbon	pentose pathway
+7	Maraba	p__Cyanobacteriota	K00033	carbon utilization	central carbon	pentose pathway
+8	Maraba	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+9	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+10	Maraba	p__Cyanobacteriota	K02706	Energy	Photosynthesis	
+11	Maraba	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+12	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+13	Maraba	p__Cyanobacteriota	K00943	MISC	Information systems	Nucleotide
+14	Maraba	p__Cyanobacteriota	K02706	Energy	Photosynthesis	
+15	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+16	Maraba	p__Cyanobacteriota	K02040	Transporters	Transporters	
+17	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+18	Maraba	p__Cyanobacteriota	K02706	Energy	Photosynthesis	
+19	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+20	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+21	Maraba	p__Cyanobacteriota	K02706	Energy	Photosynthesis	
+22	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+23	Maraba	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+24	Maraba	p__Cyanobacteriota	K02040	Transporters	Transporters	
+25	Maraba	p__Cyanobacteriota	K01494	MISC	Information systems	Nucleotide
+26	Maraba	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+27	Maraba	p__Cyanobacteriota	K02040	Transporters	Transporters	
+28	Maraba	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+29	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+30	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+31	Maraba	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+32	Maraba	p__Cyanobacteriota	K00616	carbon utilization	central carbon	pentose pathway
+33	Maraba	p__Cyanobacteriota	K00616	carbon utilization	central carbon	pentose pathway
+34	Maraba	p__Cyanobacteriota	K02040	Transporters	Transporters	
+35	Maraba	p__Cyanobacteriota	K02703	Energy	Photosynthesis	
+36	Maraba	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+37	Maraba	p__Cyanobacteriota	K02706	Energy	Photosynthesis	
+0	Maraba	p__Patescibacteriota	K01637	carbon utilization	central carbon	glycolysis
+0	Maraba	p__Pseudomonadota	K01494	MISC	Information systems	Nucleotide
+1	Maraba	p__Pseudomonadota	M24A	Organic Nitrogen	Peptidase	
+2	Maraba	p__Pseudomonadota	K02639	Energy	Photosynthesis	
+3	Maraba	p__Pseudomonadota	K02639	Energy	Photosynthesis	
+4	Maraba	p__Pseudomonadota	K01784	MISC	Information systems	Nucleotide
+5	Maraba	p__Pseudomonadota	K01784	carbon utilization	central carbon	glycolysis
+6	Maraba	p__Pseudomonadota	K01784	carbon utilization (Woodcroft)	sugar utilization (woodcroft)	galactose degradation
+7	Maraba	p__Pseudomonadota	M17	Organic Nitrogen	Peptidase	
+0	Maraba	p__Thermoplasmatota	K02703	Energy	Photosynthesis	
+1	Maraba	p__Thermoplasmatota	K02040	Transporters	Transporters	
+2	Maraba	p__Thermoplasmatota	K01251	Organic Nitrogen	Amino Acid	
+3	Maraba	p__Thermoplasmatota	K00033	carbon utilization	central carbon	pentose pathway
+4	Maraba	p__Thermoplasmatota	K00033	carbon utilization	central carbon	pentose pathway
+5	Maraba	p__Thermoplasmatota	K00036	carbon utilization	central carbon	pentose pathway
+6	Maraba	p__Thermoplasmatota	K00036	carbon utilization	central carbon	pentose pathway
+7	Maraba	p__Thermoplasmatota	K00036	carbon utilization	central carbon	glycolysis
+0	Maraba	p__Verrucomicrobiota	U69	Organic Nitrogen	Peptidase	
+1	Maraba	p__Verrucomicrobiota	U69	Organic Nitrogen	Peptidase	
+2	Maraba	p__Verrucomicrobiota	U69	Organic Nitrogen	Peptidase	
+3	Maraba	p__Verrucomicrobiota	K02040	Transporters	Transporters	
+4	Maraba	p__Verrucomicrobiota	K00616	carbon utilization	central carbon	pentose pathway
+5	Maraba	p__Verrucomicrobiota	K00616	carbon utilization	central carbon	pentose pathway
+0	Paragominas	p__Cyanobacteriota	K02639	Energy	Photosynthesis	
+1	Paragominas	p__Cyanobacteriota	K02040	Transporters	Transporters	
